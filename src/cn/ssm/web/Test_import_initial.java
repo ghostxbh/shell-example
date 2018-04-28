@@ -34,19 +34,19 @@ public class Test_import_initial {
 		return filePath.matches("^.+\\.(?i)(xlsx)$");
 	}
 
-	public static Workbook getWorkbook() throws IOException {
+	/*public static Workbook getWorkbook() throws IOException {
 		FileInputStream fis = null;
 		Workbook wb = null;
 		try {
 			String name = "D:/真账/账目公司/1、北京赛科世纪科技股份有限公司/2016年度/7、科目余额表/科目余额表.xls";
 			fis = new FileInputStream(name);
-			/*
+			
 			 * BufferedReader tBufferedReader = new BufferedReader(new
 			 * InputStreamReader(fis, "UTF-8")); StringBuffer tStringBuffer =
 			 * new StringBuffer(); String sTempOneLine = new String(""); while
 			 * ((sTempOneLine = tBufferedReader.readLine()) != null) {
 			 * tStringBuffer.append(sTempOneLine); }
-			 */
+			 
 			if (isExcel2003(name)) {// 当excel是2003时,创建excel2003
 				wb = new HSSFWorkbook(fis);
 				return wb;
@@ -67,7 +67,7 @@ public class Test_import_initial {
 		return wb;
 
 	}
-
+*/
 	public static void main(String[] args) throws Exception {
 		FileInputStream fis = null;
 		try {
