@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.smm.dao.ComparisonAbstractDao">
+	<!-- 目的：为dao接口方法提供sql语句配置 -->
+	
+	
+	<!-- 添加用户 -->
+	<insert id="addUser" resultType="int" parameterType="ComparisonAbstract">
+		insert into
+		comparison_abstract(
+		voucher_abstract,
+		debit_account,
+		credit_account)
+		values(
+		voucher_abstract=#{voucherAbstract},
+		debit_account=#{debitAccount},
+		credit_account=#{creditAccount})
+	</insert>
+	
+	<!-- 登陆验证 -->
+	<select id="login" parameterType="map" resultType="User">
+		SELECT
+		code,
+		password
+		FROM
+		user
+		where
+		code=#{code}
+		and
+		password=#{password}
+	</select>
+	<!-- 查询所有 -->
+	<select id="queryAll" resultType="User">
+		SELECT
+		id,
+		code,
+		name,
+		phone,
+		lastTime
+		FROM
+		user
+		ORDER BY
+		id
+	</select>
+	<!-- 根据用户名查看用户 -->
+	<select id="queryByName" resultType="User" parameterType="String">
+		SELECT
+		id,
+		code,
+		name,
+		phone,
+		lastTime
+		FROM
+		user
+		WHERE
+		name=#{name}
+	</select>
+	
+	<delete id="delById" resultType="int" parameterType="int">
+		DELETE FROM
+		user
+		WHERE
+		id=#{id}
+	</delete
+    
+	<update id="updateById" parameterType="int">
+		UPDATE
+		user
+		SET
+		name=#{name},
+		phone=#{phone},
+		code=#{code},
+		password=#{password},
+		remark=#{remark}
+		WHERE
+		id=#{id}
+	</update>
+</mapper>
