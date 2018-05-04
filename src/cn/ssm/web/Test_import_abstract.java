@@ -7,12 +7,18 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.SimpleDateFormat;
+import java.util.Arrays;
+import java.util.Date;
+
+import org.apache.poi.hssf.usermodel.HSSFCell;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import cn.ssm.entity.AbstractDetail;
 import cn.ssm.entity.ComparisonAbstract;
@@ -28,19 +34,19 @@ public class Test_import_abstract {
 
 		FileInputStream fis = null;
 		try {
-			fis = new FileInputStream("D:/工作簿1.xlsx");
+			fis = new FileInputStream("D:/2014序时账.XLS");
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		}
 		try {
-			/*
-			 * HSSFWorkbook hwk = new HSSFWorkbook(fis); HSSFSheet sheet =
-			 * hwk.getSheetAt(0);
-			 */
 
-			Sheet sheet = null;
-			XSSFWorkbook xb = new XSSFWorkbook(fis);
-			sheet = xb.getSheetAt(0);
+			HSSFWorkbook hwk = new HSSFWorkbook(fis);
+			HSSFSheet sheet = hwk.getSheetAt(0);
+
+			/*
+			 * Sheet sheet = null; XSSFWorkbook xb = new XSSFWorkbook(fis);
+			 * sheet = xb.getSheetAt(0);
+			 */
 
 			int firstRowNum = sheet.getFirstRowNum();
 			int lastRowNum = sheet.getLastRowNum();
@@ -56,17 +62,15 @@ public class Test_import_abstract {
 
 				e1.printStackTrace();
 			}
-
+			String[] uselessCode = { "1002", "1122", "1123", "1221", "1405", "1406", "1511", "1701", "1801", "1601",
+					"1602", "1408", "2202", "6401", "2232", "2241", "4001", "4003", "6001", "2711", "1604", "1121",
+					"2001", "2201" };
+			/*
+			 * List<Object> list = new ArrayList<Object>();
+			 * List<ComparisonAbstract> caList = new
+			 * ArrayList<ComparisonAbstract>();
+			 */
 			for (int j = firstRowNum; j < lastRowNum; j++) {
-
-				/*
-				 * String noName = null; String[] noNameAccount =
-				 * {"凭证编号","业务说明","科目编号","借方发生额","贷方发生额"}; String[]
-				 * noNameAbstract = {"上级科目名称","科目编号","科目名称","科目类型","借贷方向"}; if
-				 * (j==firstRowNum) { for (int i = 0; i < lastRowNum; i++) {
-				 * 
-				 * } }
-				 */
 
 				if (j < 1) {
 					continue;
@@ -78,15 +82,19 @@ public class Test_import_abstract {
 					cell_b = row.getCell(8); // 科目编码
 					cell_c = row.getCell(10);// 借方
 					// cell_e = row.getCell(11);// 贷方
+
 					ComparisonAbstract ca = new ComparisonAbstract();// 存去重后的摘要对象
 
 					String vAbstract = cell_a.getStringCellValue().trim();// 取excle摘要
-
+					if (vAbstract == null || vAbstract.equals("")) {
+						continue;
+					}
 					String vCode = cell_b.getStringCellValue().trim();// 取excle科目编码
-
-					// String debit = cell_c.getStringCellValue().trim();//
+					// 去除小数点和变成规定数据格式
+					String replaceCode = GetKemuList.getAccountCode(vCode);
+					// String debit = cell_c.getStringCellValue().trim();
 					// 取excle借方
-
+					// double credit = cell_e.getNumericCellValue();
 					double debit = cell_c.getNumericCellValue();// 取excle借方
 
 					String pCode = cell_d.getStringCellValue().trim();// 取excle凭证编码
@@ -105,13 +113,21 @@ public class Test_import_abstract {
 					 */
 
 					try {
-						if (debit > 0) {
+						if (debit > 0 | debit < 0) {
 
-							ca.setDebitAccount(vCode);
-
+							String substring = replaceCode.substring(0, 4);
+							if (Arrays.asList(uselessCode).contains(substring)) {
+								ca.setDebitAccount(substring);
+							} else {
+								ca.setDebitAccount(replaceCode);
+							}
 						} else {
-							ca.setCreditAccount(vCode);
-
+							String substring = replaceCode.substring(0, 4);
+							if (Arrays.asList(uselessCode).contains(substring)) {
+								ca.setCreditAccount(substring);
+							} else {
+								ca.setCreditAccount(replaceCode);
+							}
 						}
 					} catch (Exception e) {
 						e.printStackTrace();
@@ -124,42 +140,67 @@ public class Test_import_abstract {
 					}
 					ca.setVoucherAbstract(vAbstract);
 
-					int i = GetKemuList.getRepeat(vAbstract, pCode, ca.getDebitAccount(), ca.getCreditAccount());// 去重
+					/*
+					 * int i = GetKemuList.getRepeat(vAbstract, pCode,
+					 * ca.getDebitAccount(), ca.getCreditAccount());// 去重
+					 * 
+					 * if (i >= 1) { continue; } else {
+					 */
+					ca.setVoucherAbstract(vAbstract);
 
-					if (i >= 1) {
-						continue;
+					int voucherCode = GetKemuList.getVoucherCode();
+
+					String trim = sheet.getRow(j - 1).getCell(4).getStringCellValue().trim();// 上一行凭证编码
+
+					if (pCode.equals(trim)) {
+						ca.setVoucherCode(String.valueOf(voucherCode));
 					} else {
-						ca.setDebitAccount(ca.getDebitAccount());
-						ca.setCreditAccount(ca.getCreditAccount());
-						ca.setVoucherAbstract(vAbstract);
-						ca.setVoucherCode(pCode);
-
-						AbstractDetail ad = new AbstractDetail();
-
-						ca.setVoucherCode(pCode);// 设置凭证编码-摘要表
-
-						ad.setVoucherCode(pCode);// 设置凭证编码-凭证表
-						ad.setCompanyName("北京赛科世纪科技股份有限公司");// 设置公司名称
-
-						int detail = insertDetail(ad);
-						if (detail != 0) {
-							System.out.println("添加凭证表成功");
-						} else {
-							System.out.println("添加凭证表失败");
-						}
-
-						int insert = insertAbstract(ca);
-						if (insert == 0) {
-							System.out.println("添加摘要失败");
-						} else {
-							System.out.println("添加摘要成功");
-						}
-						System.out.println(ca.toString());
-						System.out.println(ad.toString());
+						ca.setVoucherCode(String.valueOf(voucherCode + 1));
 					}
-				} catch (Exception e) {
+
+					/*
+					 * if (caList.contains(ca.getVoucherCode().equals(cell_d.
+					 * getStringCellValue().trim()))) { caList.add(ca);
+					 * list.add(caList); } else { continue; }
+					 */
+
+					int insert = insertAbstract(ca);
+					if (insert == 0) {
+						System.out.println("添加摘要失败");
+					} else {
+						System.out.println("添加摘要成功");
+					}
+					System.out.println(ca.toString());
+
+				}
+
+				catch (Exception e) {
 					e.printStackTrace();
 				}
+			}
+
+			Integer voucherCode = GetKemuList.getVoucherCode();
+			AbstractDetail ad = new AbstractDetail();
+			for (int k = 1; k <= voucherCode; k++) {
+				ad.setCompanyName("宣化新迪");// 设置公司名称
+				ad.setVoucherCode(String.valueOf(k));
+				try {
+					if (GetKemuList.getVoucherCode(ad.getVoucherCode()) < 1) {
+						ad.setVoucherCode(String.valueOf(k));
+					} else {
+						continue;
+					}
+				} catch (SQLException e) {
+
+					e.printStackTrace();
+				}
+				int detail = insertDetail(ad);
+				if (detail != 0) {
+					System.out.println("添加凭证表成功");
+				} else {
+					System.out.println("添加凭证表失败");
+				}
+				System.out.println(ad.toString());
 			}
 
 		} catch (IOException e) {

@@ -33,7 +33,7 @@ public class JdbcUtil {
 	 */
 	public static Connection getConn() throws SQLException {
 		String driver = "com.mysql.jdbc.Driver";
-		String url = "jdbc:mysql://127.0.0.1:3306/comparison?useUnicode=true&characterEncoding=UTF-8&autoReconnect=true&failOverReadOnly=false&maxReconnects=10";
+		String url = "jdbc:mysql://127.0.0.1:3306/comp?useUnicode=true&characterEncoding=UTF-8&autoReconnect=true&failOverReadOnly=false&maxReconnects=10";
 		String username = "root";
 		String password = "123456";
 		try {
