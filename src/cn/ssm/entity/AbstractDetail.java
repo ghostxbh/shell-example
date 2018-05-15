@@ -20,6 +20,12 @@ public class AbstractDetail {
 
 	@Column(name = "company_name")
 	private String companyName;
+	
+	@Column(name = "department_name")
+	private String departmentName;
+	
+	@Column(name = "ticket_type")
+	private String ticketType;
 
 	@Column(name = "voucher_count")
 	private String voucherCount;
@@ -67,10 +73,29 @@ public class AbstractDetail {
 		this.priority = priority;
 	}
 
+	public String getDepartmentName() {
+		return departmentName;
+	}
+
+	public void setDepartmentName(String departmentName) {
+		this.departmentName = departmentName;
+	}
+
+	public String getTicketType() {
+		return ticketType;
+	}
+
+	public void setTicketType(String ticketType) {
+		this.ticketType = ticketType;
+	}
+
 	@Override
 	public String toString() {
 		return "AbstractDetail [id=" + id + ", voucherCode=" + voucherCode + ", companyName=" + companyName
-				+ ", voucherCount=" + voucherCount + ", priority=" + priority + "]";
+				+ ", departmentName=" + departmentName + ", ticketType=" + ticketType + ", voucherCount=" + voucherCount
+				+ ", priority=" + priority + "]";
 	}
+
+	
 
 }

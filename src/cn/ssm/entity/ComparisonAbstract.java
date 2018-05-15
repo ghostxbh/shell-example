@@ -20,10 +20,11 @@ public class ComparisonAbstract {
 	@Column(name = "voucher_abstract")
 	private String voucherAbstract;
 	
-
 	@Column(name = "voucher_code")
 	private String voucherCode;
 
+	@Column(name = "service_name")
+	private String serviceName;
 	
 	@Column(name = "debit_account")
 	private String debitAccount;
@@ -31,8 +32,8 @@ public class ComparisonAbstract {
 	@Column(name = "credit_account")
 	private String creditAccount;
 
-	@Column(name = "created_time")
-	private Date created_time;
+	@Column(name = "createdTime")
+	private Date createdTime;
 	
 	public Integer getId() {
 		return id;
@@ -74,19 +75,29 @@ public class ComparisonAbstract {
 		this.voucherCode = voucherCode;
 	}
 
-	public Date getCreated_time() {
-		return created_time;
+	public String getServiceName() {
+		return serviceName;
 	}
 
-	public void setCreated_time(Date created_time) {
-		this.created_time = created_time;
+	public void setServiceName(String serviceName) {
+		this.serviceName = serviceName;
+	}
+
+	public Date getCreatedTime() {
+		return createdTime;
+	}
+
+	public void setCreatedTime(Date createdTime) {
+		this.createdTime = createdTime;
 	}
 
 	@Override
 	public String toString() {
 		return "ComparisonAbstract [id=" + id + ", voucherAbstract=" + voucherAbstract + ", voucherCode=" + voucherCode
-				+ ", debitAccount=" + debitAccount + ", creditAccount=" + creditAccount + ", created_time="
-				+ created_time + "]";
-	}
+				+ ", serviceName=" + serviceName + ", debitAccount=" + debitAccount + ", creditAccount=" + creditAccount
+				+ ", createdTime=" + createdTime + "]";
+	}	
+
+	
 
 }

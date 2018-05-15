@@ -1,6 +1,7 @@
 package Test;
 
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -13,7 +14,10 @@ import org.springframework.jdbc.core.JdbcTemplate;
 
 import cn.ssm.dao.ComparisonAccountDao;
 import cn.ssm.dao.ComparisonAccountDaoImpl;
+import cn.ssm.entity.AbstractDetail;
 import cn.ssm.entity.ComparisonAccount;
+import cn.ssm.utils.GetKemuList;
+import cn.ssm.web.Test_import_abstract;
 import junit.framework.TestCase;
 
 public class Test1 extends TestCase {
@@ -30,34 +34,32 @@ public class Test1 extends TestCase {
 	}
 	
 	
-	public void test(){
-		String sql = "select * from comparison_account";
-		ComparisonAccount account = new ComparisonAccount();
-		List<ComparisonAccount> accList =  new ArrayList<ComparisonAccount>();
-		List<Map<String, Object>> list = jdbcTemplate.queryForList(sql);
-		for (Map<String, Object> map : list) {
-			for (Map.Entry<String, Object> map1 : map.entrySet()) {
-				String key = map1.getKey().toString();
-				String value = map1.getValue().toString();
-				if (key.equals("account_name")) {
-					account.setAccountName(value);
+	public void test() throws IOException{
+		//Integer maxvCode = GetKemuList.getVoucherCode();
+		//int maxCode = GetKemuList.getMaxCode();
+		AbstractDetail ad = new AbstractDetail();
+		for (int k = 55510; k <= 56476; k++) {
+			//maxCode = GetKemuList.getMaxCode();
+			ad.setCompanyName("淄博润义金环保新材料科技有限公司");// 设置公司名称
+			ad.setVoucherCode(String.valueOf(k));
+			ad.setPriority("2");
+		/*	try {
+				if (GetKemuList.getVoucherCode(ad.getVoucherCode()) < 1) {
+					ad.setVoucherCode(String.valueOf(k));
+				} else {
+					continue;
 				}
-				if (key.equals("id")) {
-					account.setId(Integer.parseInt(value));
-				}
-				if (key.equals("account_type")) {
-					//account.setAccountType(Integer.parseInt(value));
-				}
-				if (key.equals("account_direct")) {
-					//account.setAccountDirect(Integer.parseInt(value));
-				}
-				
-				
+			} catch (Exception e) {  
+
+				e.printStackTrace();
+			}*/
+			int detail = Test_import_abstract.insertDetail(ad);
+			if (detail != 0) {
+				System.out.println("添加凭证表成功");
+			} else {
+				System.out.println("添加凭证表失败");
 			}
-			accList.add(account);
-			
+			System.out.println(ad.toString());
 		}
-		
-		dao.queryAll();
 	}
 }
