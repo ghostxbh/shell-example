@@ -2,7 +2,7 @@
 ### 常用shell示例
 
 
-+ [web项目脚本](./github-clone-devops.sh)
++ [web项目脚本](./web-pro-script.sh)
 
     针对vue、anglar、react等前端框架项目的自动部署脚本
     
