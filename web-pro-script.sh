@@ -43,7 +43,7 @@ echo "server {
     listen       $port;
     charset      utf-8;
 
-    root         /opt/app/zeus-ui;
+    root         $dest_path;
     index        index.html;
     location / {
       try_files /\$uri /\$uri/ /index.html;
