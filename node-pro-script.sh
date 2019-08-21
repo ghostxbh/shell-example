@@ -19,6 +19,7 @@ echo "已克隆完成"
 echo "开始构建web项目"
 npm install
 
+#必须有pm2的环境
 pm2 start ./bin/www.js
 
 echo "项目已启动"
