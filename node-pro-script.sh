@@ -19,6 +19,8 @@ echo "已克隆完成"
 echo "开始构建web项目"
 npm install
 
+#必须有pm2的环境
+pm2 start ./bin/www.js
 read -p "输入启动目录，默认（./bin/www.js）：" start_path
 if [$start_path]; then
     pm2 start $start_path
