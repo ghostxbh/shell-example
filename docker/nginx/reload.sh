@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-#docker kill ningx container and restart container
+#kill docker-ningx container and restart container
 
 container_id=`docker ps --filter 'name=nginx' | awk 'NR>1' | awk '{print $1}'`
 
