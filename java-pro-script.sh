@@ -14,14 +14,14 @@ mvn clean install
 
 port=`ps -ef | grep "$jar" | grep -v 'grep' | awk '{print $2}'`
 echo "kill $port"
-if [ -n "${port}" ]; then
+if [[ -n "${port}" ]]; then
 kill -9 ${port}
 fi
 
 cd ${projectPath}/target
 
-(nohup java -jar $jar nohup.out 2>&1) &
+(nohup java -jar ${jar} nohup.out 2>&1) &
 sleep 5s
-ps -ef | grep $jar | grep -v 'grep' | awk '{print $2}'
+ps -ef | grep ${jar} | grep -v 'grep' | awk '{print $2}'
 
 echo "项目已启动"
