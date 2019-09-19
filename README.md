@@ -22,6 +22,8 @@
     + [startup](./docker/mongo/startup.sh)
 
 + nginx
-
     + [startup](./docker/nginx/startup.sh)
     + [reload](./docker/nginx/reload.sh)
+    
++ mysql
+    + [startup](./docker/mysql/startup.sh)
