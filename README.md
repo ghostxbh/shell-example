@@ -27,3 +27,9 @@
     
 + mysql
     + [startup](./docker/mysql/startup.sh)
+    
++ redis
+    + [startup](./docker/redis/startup.sh)
+    
++ tomcat
+    + [startup](./docker/tomcat/startup.sh)
